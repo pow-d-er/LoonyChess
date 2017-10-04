@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class King extends Piece{
 
-    boolean isChecked;
+    private boolean isChecked;
 
     King(String position, boolean isItWhite){
         super(position, isItWhite);

@@ -27,12 +27,16 @@ public class Player {
 
     public void setUpPieces(Map<String, Field> board){
         List<Piece> pieces = new ArrayList<>();
-        int whichLine;
+        int whichLine, toAdd;
+        String position;
+
         if(white){
             whichLine = 1;
+            toAdd = 1;
         }
         else{
             whichLine = 8;
+            toAdd = -1;
         }
         king = new King("e" + whichLine, this.white);
 
@@ -48,6 +52,11 @@ public class Player {
         pieces.add(board.get("c" + whichLine).setAndReturn(new Bishop("c" + whichLine,  this.white)));
         pieces.add(board.get("f" + whichLine).setAndReturn(new Bishop( "f" + whichLine, this.white)));
 
+        for(char c = 'a'; c < 'i'; c++){
+            position = c + "" + (whichLine + toAdd);
+            pieces.add(board.get(position)
+                    .setAndReturn(new Pawn(position, this.white)));
+        }
 
         this.pieces = pieces;
     }
