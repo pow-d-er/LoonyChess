@@ -6,7 +6,9 @@ import java.util.Map;
 
 public class Pawn extends Piece {
 
+    private boolean possibilityOfRightEnPassant;
 
+    private boolean possibilityOfLeftEnPassant;
 
     Pawn(String position, boolean isItWhite){
         super(position, isItWhite);
@@ -38,16 +40,36 @@ public class Pawn extends Piece {
         }
 
 
-        //moves one and two forward
+        //moves one field forward
+        Pawn neighbourPawn;
+
         if (board.get(column + "" + (row + toAdd)).getPiece() == null){
 
             move = column + "" + (row + toAdd);
             if (checkIfMoveIsLegal(move)) possibleMoves.add(move);
 
+            //move two fields forward
+
             if (row == colorNumber) {
                 if (board.get(column + "" + (row + toAdd*2)).getPiece() == null){
                     move = column + "" + (row + toAdd * 2);
                     if (checkIfMoveIsLegal(move)) possibleMoves.add(move);
+
+                    //Es passant
+
+                    for(int i = -1; i < 2; i += 2) {
+                        move = (char) (column + i) + "" + (row + toAdd * 2);
+                        if (checkIfMoveIsLegal(move)) {
+                            if (row + toAdd * 2 == 4 || row + toAdd * 2 == 5) {
+                                if (board.get(move).getPiece().getClass().getSimpleName().equals("Pawn")) {
+                                    neighbourPawn = (Pawn) board.get(move).getPiece();
+                                    neighbourPawn.setPossibilityOfEsPassant(i);
+                                }
+                            }
+                        }
+                    }
+
+
                 }
             }
         }
@@ -74,11 +96,30 @@ public class Pawn extends Piece {
 
 
 //        TO DO:
-//        1. en passant
 //        2. promotion
 
         return possibleMoves;
     }
 
+    public void setPossibilityOfEsPassant(int i){
+        switch(i){
+            case -1:
+                setPossibilityOfLeftEnPassant(true);
+                break;
+            case 1:
+                setPossibilityOfRightEnPassant(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setPossibilityOfRightEnPassant(boolean possibilityOfRightEnPassant) {
+        this.possibilityOfRightEnPassant = possibilityOfRightEnPassant;
+    }
+
+    private void setPossibilityOfLeftEnPassant(boolean possibilityOfLeftEnPassant) {
+        this.possibilityOfLeftEnPassant = possibilityOfLeftEnPassant;
+    }
 
 }
